@@ -355,7 +355,7 @@ src="https://www.facebook.com/tr?id=1541412027779641&ev=PageView&noscript=1"
         <div class="suits reveal" style="justify-content:flex-start;margin-top:24px">♠ ♦ ♣ ♥</div>
       </div>
 
-      <form id="applyForm" class="reveal" method="POST" novalidate>
+      <form id="applyForm" class="reveal" novalidate>
         <div class="field">
           <label for="name" data-en="Your name" data-ru="Ваше имя">Your name</label>
           <input id="name" name="name" type="text" required data-en-ph="Full name" data-ru-ph="Имя и фамилия" placeholder="Full name">
@@ -464,21 +464,22 @@ src="https://www.facebook.com/tr?id=1541412027779641&ev=PageView&noscript=1"
 
   /* set ENDPOINT to your Google Apps Script Web App URL to store leads in Google Sheets */
   const ENDPOINT = "https://script.google.com/macros/s/AKfycbyQraQodu8KoRy2XUX_hPUnIswTuSLEsJfTuq1gyHGn_derY4u_wGgKShyIflFG8WHCPA/exec";
-  const form = document.getElementById('applyForm');
-  form.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const nameEl    = form.elements['name'];
-    const contactEl = form.elements['contact'];
-    const interestEl = form.elements['interest'];
-    if(!nameEl.value.trim() || !contactEl.value.trim()){ form.reportValidity?.(); return; }
-    const data = { name:nameEl.value.trim(), contact:contactEl.value.trim(), interest:interestEl.value, lang:document.documentElement.lang, ts:new Date().toISOString() };
-    if(ENDPOINT){
-      try{ await fetch(ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(data)}); }
-      catch(err){ console.error('Lead submit failed:', err); }
-    }
-    form.classList.add('sent');
-    if (typeof fbq === 'function') { fbq('track', 'Lead'); }
-    document.getElementById('thanks').classList.add('show');
+  document.querySelectorAll('form.applyForm, form#applyForm').forEach((form) => {
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const nameEl     = form.elements['name'];
+      const contactEl  = form.elements['contact'];
+      const interestEl = form.elements['interest'];
+      if(!nameEl.value.trim() || !contactEl.value.trim()){ form.reportValidity?.(); return; }
+      const data = { name:nameEl.value.trim(), contact:contactEl.value.trim(), interest:interestEl.value, lang:document.documentElement.lang, ts:new Date().toISOString() };
+      if(ENDPOINT){
+        try{ await fetch(ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(data)}); }
+        catch(err){ console.error('Lead submit failed:', err); }
+      }
+      form.classList.add('sent');
+      if (typeof fbq === 'function') { fbq('track', 'Lead'); }
+      form.querySelector('.thanks').classList.add('show');
+    });
   });
 </script>
 
