@@ -465,6 +465,10 @@ src="https://www.facebook.com/tr?id=1541412027779641&ev=PageView&noscript=1"
   /* set ENDPOINT to your Google Apps Script Web App URL to store leads in Google Sheets */
   const ENDPOINT = "https://script.google.com/macros/s/AKfycbyQraQodu8KoRy2XUX_hPUnIswTuSLEsJfTuq1gyHGn_derY4u_wGgKShyIflFG8WHCPA/exec";
   document.querySelectorAll('form.applyForm, form#applyForm').forEach((form) => {
+    // Block third-party scripts (e.g. SaleBot Pixel) from calling form.submit() directly,
+    // which would bypass e.preventDefault() in our submit listener.
+    form.submit = function() {};
+
     form.addEventListener('submit', async (e)=>{
       e.preventDefault();
       const nameEl     = form.elements['name'];
