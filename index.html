@@ -474,7 +474,7 @@ src="https://www.facebook.com/tr?id=1541412027779641&ev=PageView&noscript=1"
       catch(err){ console.error('Lead submit failed:', err); }
     }
     form.classList.add('sent');
-    fbq('track', 'Lead');
+    if (typeof fbq === 'function') { fbq('track', 'Lead'); }
     document.getElementById('thanks').classList.add('show');
   });
 </script>
